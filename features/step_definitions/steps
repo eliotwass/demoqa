@@ -1,0 +1,17 @@
+Given(/^I am on the Google homepage$/) do
+  visit 'http://www.google.com'
+end
+
+Then(/^I will search for "([^"]*)"$/) do |arg1|
+  fill_in 'gs_htif0', :with => searchText
+end
+
+Then(/^I should see "([^"]*)"$/) do |arg1|
+  page.should have_content(expectedText)
+end
+
+Then(/^I will click the about link$/) do
+  pending # Write code here that turns the phrase above into concrete actions
+end
+
+
