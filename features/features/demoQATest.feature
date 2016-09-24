@@ -5,4 +5,4 @@ Scenario: Search for the website
 	When I will click the registration button
 	Then I expect to see the registration form
 	Then I will fill in the form and click Submit
-	And my account is created.
+	And my account is created

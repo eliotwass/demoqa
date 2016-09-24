@@ -1,11 +1,21 @@
 require 'selenium-webdriver'
 require 'securerandom'
+require 'capybara-screenshot/cucumber'
 random_string = SecureRandom.hex
 driver = Selenium::WebDriver.for :firefox
+puts driver.manage.window.size
+target_size = Selenium::WebDriver::Dimension.new(1024, 768)
+driver.manage.window.size = target_size
+puts driver.manage.window.size
 
 
 Given(/^I am on the demoqa homepage$/) do
-  driver.navigate.to "http://demoqa.com"
+  driver.get "http://demoqa.com"
+time = Time.now.strftime('%a_%e_%Y_%l_%m_%p_%M')
+
+    file_path = File.expand_path(File.dirname(__FILE__) + '/../../screenshots')+'/'+time +'.png'
+
+    driver.save_screenshot file_path
 end
 
 When(/^I will click the registration button$/) do
@@ -13,7 +23,8 @@ When(/^I will click the registration button$/) do
 end
 
 Then(/^I expect to see the registration form$/) do
-  element = driver.find_element(:id, "piereg_pie_form_heading")
+sleep 5  
+element = driver.find_element(:id, "piereg_pie_form_heading")
 end
 
 Then(/^I will fill in the form and click Submit$/) do
@@ -42,11 +53,28 @@ driver.find_element(:id, "name_3_firstname").clear
     driver.find_element(:name, "pie_submit").click
     driver.find_element(:id, "username").clear
     driver.find_element(:id, "username").send_keys "#{random_string}"
-    sleep 5
+    sleep 10
     driver.find_element(:name, "pie_submit").click
 end
 
-Then(/^my account is created\.$/) do
+Then(/^my account is created$/) do
   element = driver.find_element(:class, "piereg_message")
 end
 
+After do |scenario| 
+    if(scenario.failed?)
+        puts "after step is executed"
+    end
+    time = Time.now.strftime('%a_%e_%Y_%l_%m_%p_%M')
+
+    file_path = File.expand_path(File.dirname(__FILE__) + '/../../screenshots')+'/'+time +'.png'
+
+    page.driver.browser.save_screenshot file_path
+end
+
+Given /^snapshot$/ do
+    time = Time.now.strftime('%a_%e_%Y_%l_%m_%p_%M')
+
+    file_path = File.expand_path(File.dirname(__FILE__) + '/../../screenshots')+'/'+time +'.png'
+    page.driver.browser.save_screenshot file_path
+end
